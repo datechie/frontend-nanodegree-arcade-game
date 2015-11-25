@@ -1,28 +1,6 @@
-//var x = 100;
-//var y = 100;
-var row = 1;
 var px = 202; //width of canvas divided by 2;
 var py = 415;
 
-/*var dim1 = {x: 50, y: 5, w: 50, h: 50}
-var dim2 = {x: 20, y: 10, w: 60, h: 40}
-
-var rect1 = Crafty.e("2D, Canvas, Color").attr(dim1).color("red");
-
-var rect2 = Crafty.e("2D, Canvas, Color, Keyboard, Fourway").fourway(2).attr(dim2).color("blue");
-
-rect2.bind("EnterFrame", function () {
-    if (rect1.x < rect2.x + rect2.w &&
-        rect1.x + rect1.w > rect2.x &&
-        rect1.y < rect2.y + rect2.h &&
-        rect1.h + rect1.y > rect2.y) {
-        // collision detected!
-        this.color("green");
-    } else {
-        // no collision
-        this.color("blue");
-    }
-});*/
 
 // Enemies our player must avoid
 var Enemy = function(x,y) {
@@ -68,19 +46,13 @@ var Player = function(x,y) {
 
 Player.prototype.update = function() {
     for ( var enemy in allEnemies) {
-        /*if (Math.sqrt((this.x - allEnemies[enemy].x)*(this.x - allEnemies[enemy].x)+
-            (this.y - allEnemies[enemy].y-10)*(this.y - allEnemies[enemy].y-10)) < 70) {
-            this.x = px;
-            this.y = py;
-        }*/
-            //this.lifes -=1;
             ex = allEnemies[enemy].x;
             ey = allEnemies[enemy].y;
             var pceil = (Math.floor(this.y/101));
             var eceil = (Math.floor(ey/101));
-            console.log("x = " + this.x + " y = " + this.y + " Row = " + pceil);
-            console.log("Player Row: " + pceil);
-            console.log("Enemy # " + enemy + " Bug Row: " + eceil);
+            //console.log("x = " + this.x + " y = " + this.y + " Row = " + pceil);
+            //console.log("Player Row: " + pceil);
+            //console.log("Enemy # " + enemy + " Bug Row: " + eceil);
             /* This works -- if ((this.x <= ex + 50) && ((this.x + 50) > ex) && (this.y < ey + 50) && ((this.y + 50) > ey))
             //not required if ((this.x <= ex + 101) && ((this.x + 101) > ex))
             //not required if ((this.x <= allEnemies[enemy].x && this.x+101 >= allEnemies[enemy].x) && (this.y <= allEnemies[enemy].y && this.y+ 171 >= allEnemies[enemy].y))
@@ -92,6 +64,7 @@ Player.prototype.update = function() {
             }*/
             if (pceil === eceil){
                 if (((this.x < ex) && (ex < this.x + 68)) || ((ex < this.x) && (this.x < ex + 68))){
+                    console.log ("!!!!COLLISION!!!!");
                     this.x = px;
                     this.y = py;
                 }
@@ -100,9 +73,21 @@ Player.prototype.update = function() {
 
         }
 
-   if (this.y < 0) {
-        this.y = py;
-        this.x = px;
+    if (this.x <= 0) {
+        this.x = 0;
+    }
+    else if (this.x > 404) {
+        this.x = 404;
+    }
+    //else if (this.y === 0) {
+    //    this.y = 415;
+    //}
+    if (this.y <= 0) {
+        this.y = 415;
+        console.log("Reached River, resetting");
+    }
+    else if (this.y > 415) {
+        this.y = 415;
     }
 
 };
@@ -112,9 +97,11 @@ Player.prototype.render = function() {
 };
 
 Player.prototype.handleInput = function(keys){
-    if (keys === "up") {
+    /*if (keys === "up") {
+        console.log ("T: Before y is " + this.y);
         if (this.y > -20) {
             this.y -= 83;
+            console.log ("T: After y is " + this.y);
         }
     }
     else if (keys === "down") {
@@ -123,7 +110,7 @@ Player.prototype.handleInput = function(keys){
         }
     }
     else if (keys == "right") {
-        if (this.x < 403) {
+        if (this.x < 404) {
             this.x += 101;
         }
     }
@@ -131,6 +118,38 @@ Player.prototype.handleInput = function(keys){
         if (this.x > 0) {
             this.x -= 101;
         }
+    }*/
+
+    // using switch statement
+    switch (keys){
+        case 'up':
+            //if (this.y > -20) {
+                console.log ("T: Before y is " + this.y);
+                this.y -= 83;
+                console.log ("T: After y is " + this.y);
+                break;
+            //}
+        case 'down':
+            //if (this.y < 403) {
+                this.y += 83;
+                break;
+            //}
+        case 'left':
+            console.log ("L: Before x is " + this.x);
+            //if (this.x !== 0) {
+                this.x = this.x - 101;
+                console.log ("L: After x is " + this.x);
+                break;
+            //}
+        case 'right':
+            console.log ("R: Before x is " + this.x)
+            //if (this.x !== 404) {
+                this.x += 101;
+                console.log ("R: After x is " + this.x);
+                break;
+            //}
+        //default:
+        //    break;
     }
 }
 // Now instantiate your objects.
