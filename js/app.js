@@ -123,10 +123,7 @@ Player.prototype.handleInput = function(keys){
 // Now instantiate your objects.
 // Place all enemy objects in an array called allEnemies
 // Place the player object in a variable called player
-
-//var allEnemies = [new Enemy(400,60), new Enemy(100, 140), new Enemy(200, 225)];
 var allEnemies = [new Enemy(400,60), new Enemy(100, 143), new Enemy(200, 226)];
-//var allEnemies = [new Enemy(40,60), new Enemy(87, 143), new Enemy(123, 226)];
 var player = new Player(202, 415);
 
 // This listens for key presses and sends the keys to your
