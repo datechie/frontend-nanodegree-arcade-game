@@ -1,8 +1,3 @@
-// Initial Player Position
-var px = 202;
-var py = 415;
-
-
 // Enemies our player must avoid
 var Enemy = function(x,y) {
     // Variables applied to each of our instances go here,
@@ -27,7 +22,7 @@ Enemy.prototype.update = function(dt) {
     if (this.x > 501) {
         this.x = -100;
     }
-    //console.log("Speed * dt is ", speed * dt);
+    //console.log("Speed * dt is ", speed * dt); /* - DEBUG STATEMENT */
     this.x += Math.floor(speed * dt);
 };
 
@@ -47,25 +42,28 @@ var Player = function(x,y) {
 };
 
 Player.prototype.update = function() {
-    // Check for Collisions
+    // Check for Collisions with enemies
     this.collide();
 
     // Boundary checks to ensure player does not go off canvas
     // x boundary check
     if (this.x <= 0) {
-        this.x = 0;
+        this.x = 0; /* We can't go too much to the left and disappear */
     }
     else if (this.x > 404) {
-        this.x = 404;
+        this.x = 404; /* Max on the right */
     }
 
     // y boundary check
     if (this.y <= 0) {
+        //console.log("Reached River, resetting"); /* - DEBUG STATEMENT */
+        //alert("You have won!!!"); /* We can un-comment if we need a pop-up on reaching the top */
+        // Since player has reched water, we need to reset player position
+        this.x = 202;
         this.y = 415;
-        console.log("Reached River, resetting");
     }
     else if (this.y > 415) {
-        this.y = 415;
+        this.y = 415; /* can't go too far at the bottom */
     }
 
 };
@@ -75,54 +73,50 @@ Player.prototype.render = function() {
 };
 
 // Function to check for player/bug collisions
-Player.prototype.collide = function(){
-    for (var enemy in allEnemies) {
+Player.prototype.collide = function() {
+    for (var enemy = 0; enemy < allEnemies.length; enemy++) {
         // Getting shorter variables
         ex = allEnemies[enemy].x;
         ey = allEnemies[enemy].y;
 
         // Getting player and enemy rows
-        var prow = (Math.floor(this.y/101));
-        var erow = (Math.floor(ey/101));
+        var player_row = (Math.floor(this.y/101));
+        var enemy_row = (Math.floor(ey/101));
         // If player and bug are in the same row, we will check only the x values to see if they are colliding or not.
-        // The width has been set at 68 to get collisions when player and bug are actually closer. The width of 101 results in 
-        // collisions happening even if the player is farther from the bug
-        if (prow === erow){
-            if (((this.x < ex) && (ex < this.x + 68)) || ((ex < this.x) && (this.x < ex + 68))){
-                console.log ("!!!!COLLISION!!!!");
-                this.x = px;
-                this.y = py;
-            }
+        // The width has been set at 68 to get collisions when player and bug are actually closer. The width of 101 (image dimensions are 101 x 171)
+        // results in collisions happening even if the player is farther from the bug and looks weird
+        if ((player_row === enemy_row) && (((this.x < ex) && (ex < this.x + 68)) || ((ex < this.x) && (this.x < ex + 68)))) {
+            //if (((this.x < ex) && (ex < this.x + 68)) || ((ex < this.x) && (this.x < ex + 68))) { /* Combined this if into the above if */
+            //console.log ("!!!!COLLISION!!!!"); /* - DEBUG STATEMENT */
+            // On collision, reset player to starting position
+            this.x = 202;
+            this.y = 415;
         }
     }
 }
 
-Player.prototype.handleInput = function(keys){
+Player.prototype.handleInput = function(keys) {
     // using switch statement
+    // Defining how and how much the player will move using the arrow keys
     switch (keys){
         case 'up':
-            console.log ("T: Before y is " + this.y);
-            this.y -= 83;
-            console.log ("T: After y is " + this.y);
+            this.y -= 83; /* Moving up */
             break;
         case 'down':
-            this.y += 83;
+            this.y += 83; /* Moving down */
             break;
         case 'left':
-            //console.log ("L: Before x is " + this.x);
-            this.x = this.x - 101;
-            //console.log ("L: After x is " + this.x);
+            this.x = this.x - 101; /* Moving left */
             break;
         case 'right':
-            //console.log ("R: Before x is " + this.x)
-            this.x += 101;
-            //console.log ("R: After x is " + this.x);
+            this.x += 101; /* Moving right */
             break;
     }
 }
 // Now instantiate your objects.
 // Place all enemy objects in an array called allEnemies
 // Place the player object in a variable called player
+// Starting positions of enemies and player
 var allEnemies = [new Enemy(400,60), new Enemy(100, 143), new Enemy(200, 226)];
 var player = new Player(202, 415);
 
