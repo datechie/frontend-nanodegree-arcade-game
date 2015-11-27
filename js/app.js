@@ -1,3 +1,8 @@
+'use strict';
+
+var TILE_WIDTH = 101,
+    TILE_HEIGHT = 83;
+
 // Enemies our player must avoid
 var Enemy = function(x,y) {
     // Variables applied to each of our instances go here,
@@ -76,8 +81,8 @@ Player.prototype.render = function() {
 Player.prototype.collide = function() {
     for (var enemy = 0; enemy < allEnemies.length; enemy++) {
         // Getting shorter variables
-        ex = allEnemies[enemy].x;
-        ey = allEnemies[enemy].y;
+        var ex = allEnemies[enemy].x;
+        var ey = allEnemies[enemy].y;
 
         // Getting player and enemy rows
         var player_row = (Math.floor(this.y/101));
@@ -93,26 +98,26 @@ Player.prototype.collide = function() {
             this.y = 415;
         }
     }
-}
+};
 
 Player.prototype.handleInput = function(keys) {
     // using switch statement
     // Defining how and how much the player will move using the arrow keys
     switch (keys){
         case 'up':
-            this.y -= 83; /* Moving up */
+            this.y -= TILE_HEIGHT; /* Moving up */
             break;
         case 'down':
-            this.y += 83; /* Moving down */
+            this.y += TILE_HEIGHT; /* Moving down */
             break;
         case 'left':
-            this.x = this.x - 101; /* Moving left */
+            this.x -= TILE_WIDTH; /* Moving left */
             break;
         case 'right':
-            this.x += 101; /* Moving right */
+            this.x += TILE_WIDTH; /* Moving right */
             break;
     }
-}
+};
 // Now instantiate your objects.
 // Place all enemy objects in an array called allEnemies
 // Place the player object in a variable called player
